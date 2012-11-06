@@ -35,6 +35,7 @@
  */
 package org.geosdi.geoplatform.configurator.gui;
 
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Collections;
@@ -70,6 +71,20 @@ public class GuiComponentIDs {
     public static final String GRATICULA = "graticula";
     //
     public static final String EXTERNAL_LINKS = "externalLinks";
+    
+    /**
+     * Menu Bar Geodata
+     */
+    public static final String SHOW_GEODATA_RASTER_LAYERS = "geodata_raster_layers";
+    public static final String SHOW_GEODATA_VECTOR_LAYERS = "geodata_vector_layers";
+    public static final String SHOW_GEODATA_UPLOAD_RASTER = "geodata_upload_raster";
+    public static final String SHOW_GEODATA_UPLOAD_VECTOR = "geodata_upload_vector";
+    public static final String SHOW_GEODATA_RASTER_DATA_FOLDER = "geodata_raster_data_folder";
+    public static final String SHOW_GEODATA_VECTOR_DATA_FOLDER = "geodata_vector_data_folder";
+    public static final String SHOW_GEODATA_GET_BIG_RASTER_FILE = "geodata_big_raster_file";
+    public static final String SHOW_GEODATA_GEORECTIFY = "geodata_georectify";
+    //public static final String SHOW_GEODATA_SAVE_GEORECTIFY = "geodata_save_georectify";
+    
     /**
      * Map Toolbar
      */
