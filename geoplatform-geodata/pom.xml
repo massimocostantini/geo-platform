@@ -20,8 +20,8 @@
     <!-- Convenience property to set the GWT version -->
     <gwtVersion>2.4.0</gwtVersion>
     <!-- GWT needs at least java 1.5 -->
-    <!--webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding-->
+    <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
@@ -102,24 +102,23 @@
         <executions>
           <execution>
             <goals>
-              <goal>compile</goal>
+              <!--goal>compile</goal-->
               <goal>test</goal>
-              <goal>i18n</goal>
-              <goal>generateAsync</goal>
+              <goal>resources</goal>
             </goals>
           </execution>
         </executions>
-        <!-- Plugin configuration. There are many available options, see 
-          gwt-maven-plugin documentation at codehaus.org -->
-        <configuration>
-          <runTarget>jar.html</runTarget>
-          <hostedWebapp>${webappDirectory}</hostedWebapp>
-          <i18nMessagesBundle>org.geosdi.geoplatform.gui.client.action.client.Messages</i18nMessagesBundle>
-        </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
       </plugin>
 
-      <!-- Copy static web files before executing gwt:run -->
       <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+      </plugin>
+      <!-- Copy static web files before executing gwt:run -->
+      <!--plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>2.1.1</version>
@@ -132,9 +131,9 @@
           </execution>
         </executions>
         <configuration>
-          <webappDirectory>${webappDirectory}</webappDirectory>
+          <webappDirectory></webappDirectory>
         </configuration>
-      </plugin>
+      </plugin-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -145,6 +144,39 @@
         </configuration>
       </plugin>
     </plugins>
+
+       <resources>
+            <resource>
+                <directory>${basedir}/src/main/java</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.sql</include>
+                    <include>**/*.html</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.utf</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.serialized</include>
+                    <include>**/*.xsd</include>
+                    <include>META-INF/*.jai</include>
+                    <include>META-INF/mailcap</include>
+                    <include>META-INF/services/**</include>
+                    <include>applicationContext.xml</include>
+                    <include>**/*.ftl</include>
+                    <include>**/*.css</include>
+                    <include>**/*.js</include>
+                    <include>**/*.png</include>
+                    <include>**/*.gif</include>
+                    <include>**/*.sld</include>
+                    <include>**/*.ico</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
   </build>
 
 </project>
