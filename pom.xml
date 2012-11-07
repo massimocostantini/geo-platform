@@ -187,6 +187,7 @@
         <module>geoplatform-tools</module>
         <module>geoplatform-xml-binding</module>
         <module>geoplatform-sharing</module>
+        <module>geoplatform-geodata</module>
         <module>test</module>
     </modules>
 
