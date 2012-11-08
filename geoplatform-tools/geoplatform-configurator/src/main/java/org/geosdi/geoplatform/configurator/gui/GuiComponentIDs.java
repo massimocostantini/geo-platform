@@ -170,6 +170,15 @@ public class GuiComponentIDs {
         all.add(LAYER_MENU);
         all.add(GRATICULA);
         all.add(VIEWPORT);
+        //8-11-2012 add for Geodata
+        all.add(SHOW_GEODATA_RASTER_LAYERS);
+        all.add(SHOW_GEODATA_VECTOR_LAYERS);
+        all.add(SHOW_GEODATA_UPLOAD_RASTER); 
+   		all.add(SHOW_GEODATA_UPLOAD_VECTOR);
+   		all.add(SHOW_GEODATA_RASTER_DATA_FOLDER);
+   		all.add(SHOW_GEODATA_VECTOR_DATA_FOLDER);
+   		all.add(SHOW_GEODATA_GET_BIG_RASTER_FILE);
+   		all.add(SHOW_GEODATA_GEORECTIFY); 
         // Map Toolbar
         all.add(GEO_PLATFORM_INFO_APP);
         all.add(EXTERNAL_LINKS);
