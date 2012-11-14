@@ -239,6 +239,16 @@ public class GuiComponentIDs {
         mapUser.put(LAYER_MENU, Boolean.TRUE);
         mapUser.put(GRATICULA, Boolean.TRUE);
         mapUser.put(VIEWPORT, Boolean.TRUE);
+        //8-11-2012 add for Geodata
+        mapUser.put(SHOW_GEODATA_RASTER_LAYERS, Boolean.TRUE);
+        mapUser.put(SHOW_GEODATA_VECTOR_LAYERS, Boolean.TRUE);
+        mapUser.put(SHOW_GEODATA_UPLOAD_RASTER, Boolean.TRUE); 
+        mapUser.put(SHOW_GEODATA_UPLOAD_VECTOR, Boolean.TRUE);
+        mapUser.put(SHOW_GEODATA_RASTER_DATA_FOLDER, Boolean.TRUE);
+        mapUser.put(SHOW_GEODATA_VECTOR_DATA_FOLDER, Boolean.TRUE);
+        mapUser.put(SHOW_GEODATA_GET_BIG_RASTER_FILE, Boolean.TRUE);
+        mapUser.put(SHOW_GEODATA_GEORECTIFY, Boolean.TRUE); 
+        
         // Map Toolbar
         mapUser.put(GEO_PLATFORM_INFO_APP, Boolean.TRUE);
         mapUser.put(ZOOM_IN, Boolean.TRUE);

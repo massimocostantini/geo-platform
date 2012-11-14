@@ -18,10 +18,11 @@
     
     <properties>
         <!-- Keep aligned with src/main/resources/geoplatform_datasource.xml -->
-        <db.url>jdbc:postgresql://localhost:5432/gp</db.url>
+        <db.url>jdbc:postgresql://192.168.205.11:5432/gp</db.url>
         <db.driverClassName>org.postgresql.Driver</db.driverClassName>
         <db.username>postgres</db.username>
-        <db.password>0x,postgres,0x</db.password>
+        <db.password>postgres</db.password>
+        <!-- db.password>0x,postgres,0x</db.password-->
         
         <dataset.file>src/test/resources/bootstrap-db.xml</dataset.file>
     </properties>

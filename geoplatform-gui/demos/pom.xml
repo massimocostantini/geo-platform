@@ -24,14 +24,14 @@
         <module>catalog-finder-demo</module>
     </modules>
     
-<!--    <profiles>
+    <profiles>
         <profile>
             <id>finder</id>
             <modules>
                 <module>catalog-finder-demo</module>
             </modules>
         </profile>
-    </profiles>-->
+    </profiles>
 
 
 </project>

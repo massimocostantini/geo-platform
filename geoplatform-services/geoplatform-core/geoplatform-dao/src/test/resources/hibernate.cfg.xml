@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-
-    <!-- This file is only needed to create the DDL file -->
-    <!-- When adding/removing classes, please also keep aligned the main
+ <!-- This file is only needed to create the DDL file 
+ When adding/removing classes, please also keep aligned the main
          persistence file src/main/resources/META-IN/persistence.xml -->
-    <session-factory>
-        <property name="hibernate.dialect">org.hibernatespatial.postgis.PostgisDialect</property>
-        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-     
-<!--        <property name="hibernate.cache.provider_configuration_file_resource_path">/ehcacheTerracotta.xml</property>-->
-    <!-- MAPPING MODEL RESOURCES -->
-        <mapping  class="org.geosdi.geoplatform.core.model.GPUser"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPApplication"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPAccount"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPAccountProject"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPProject"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPViewport"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPFolder"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPLayer"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPVectorLayer"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPRasterLayer"/>
-        <!--mapping  class="org.geosdi.geoplatform.core.model.GPStyle"/-->
-        <mapping  class="org.geosdi.geoplatform.core.model.GPAuthority"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GeoPlatformServer"/>    	
-        <mapping  class="org.geosdi.geoplatform.core.model.GPOrganization"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GPMessage"/>
-        <!-- ACL -->
-        <mapping  class="org.geosdi.geoplatform.core.acl.AclSid"/>
-        <mapping  class="org.geosdi.geoplatform.core.acl.AclClass"/>
-        <mapping  class="org.geosdi.geoplatform.core.acl.AclObjectIdentity"/>
-        <mapping  class="org.geosdi.geoplatform.core.acl.AclEntry"/>
-        <mapping  class="org.geosdi.geoplatform.core.acl.GuiComponent"/>
-        
-        <!-- GP ACCESS INFO -->
-        <mapping  class="org.geosdi.geoplatform.core.model.GSAccount"/>
-        <mapping  class="org.geosdi.geoplatform.core.model.GSResource"/>
-    </session-factory>
+ <session-factory name="">
+  <property name="hibernate.dialect">org.hibernatespatial.postgis.PostgisDialect</property>
+  <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+  <property name="hibernate.connection.url">SNVIPRBESTDB04.snipc.dpc.local:5432</property>
+  <property name="hibernate.connection.username">postgres</property>
+  <property name="hibernate.connection.password">postgres</property>
+  <property name="hibernate.connection.autocommit">true</property>
+  <!--        <property name="hibernate.cache.provider_configuration_file_resource_path">/ehcacheTerracotta.xml</property>
+ MAPPING MODEL RESOURCES -->
+  <mapping class="org.geosdi.geoplatform.core.model.GPUser"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPApplication"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPAccount"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPAccountProject"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPProject"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPViewport"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPFolder"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPLayer"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPVectorLayer"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPRasterLayer"/>
+  <!--mapping  class="org.geosdi.geoplatform.core.model.GPStyle"/-->
+  <mapping class="org.geosdi.geoplatform.core.model.GPAuthority"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GeoPlatformServer"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPOrganization"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GPMessage"/>
+  <!-- ACL -->
+  <mapping class="org.geosdi.geoplatform.core.acl.AclSid"/>
+  <mapping class="org.geosdi.geoplatform.core.acl.AclClass"/>
+  <mapping class="org.geosdi.geoplatform.core.acl.AclObjectIdentity"/>
+  <mapping class="org.geosdi.geoplatform.core.acl.AclEntry"/>
+  <mapping class="org.geosdi.geoplatform.core.acl.GuiComponent"/>
+  <!-- GP ACCESS INFO -->
+  <mapping class="org.geosdi.geoplatform.core.model.GSAccount"/>
+  <mapping class="org.geosdi.geoplatform.core.model.GSResource"/>
+ </session-factory>
 </hibernate-configuration>
