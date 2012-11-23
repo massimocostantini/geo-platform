@@ -36,6 +36,7 @@
 package org.geosdi.geoplatform.gui.responce;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -58,8 +59,8 @@ public class LayerSchemaDTO implements Serializable {
     //
     private String typeName;
     private String targetNamespace;
-    private AttributeDTO geometry;
-    //
+    private GeometryAttributeDTO geometry;
+    // Non-spatial attributes
     @XmlElementWrapper(name = "attributes")
     @XmlElement(name = "attribute")
     private List<AttributeDTO> attributes;
@@ -80,11 +81,11 @@ public class LayerSchemaDTO implements Serializable {
         this.targetNamespace = targetNamespace;
     }
 
-    public AttributeDTO getGeometry() {
+    public GeometryAttributeDTO getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(AttributeDTO geometry) {
+    public void setGeometry(GeometryAttributeDTO geometry) {
         this.geometry = geometry;
     }
 
@@ -94,6 +95,17 @@ public class LayerSchemaDTO implements Serializable {
 
     public List<AttributeDTO> getAttributes() {
         return attributes;
+    }
+
+    public List<String> getAttributeNames() {
+        if (attributes == null || attributes.isEmpty()) {
+            return null;
+        }
+        List<String> attributeNames = new ArrayList<String>(attributes.size());
+        for (AttributeDTO attribute : attributes) {
+            attributeNames.add(attribute.getName());
+        }
+        return attributeNames;
     }
 
     @Override

@@ -36,6 +36,7 @@
 package org.geosdi.geoplatform.connector.server.request;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -55,20 +56,32 @@ public interface GPConnectorRequest<T> {
 
     URI getURI();
 
-    T getResponse() throws IllegalParameterFault, ServerInternalFault, IOException;
+    T getResponse() throws IllegalParameterFault, ServerInternalFault,
+            IOException;
 
     CredentialsProvider getCredentialsProvider();
 
     DefaultHttpClient getClientConnection();
 
     /**
-     * Method to generate String from a Request
+     * <p>Method to generate Response AS a {@link String} string.</p>
      *
      * @return {@link String}
      *
-     * @throws ServerInternalFault, IOException
+     * @throws ServerInternalFault, IOException, IllegalParameterFault
      */
     String getResponseAsString() throws ServerInternalFault, IOException,
+            IllegalParameterFault;
+
+    /**
+     * <p>Method to generate Response AS a {@link InputStream} Stream. Remember
+     * to close the Stream</p>
+     *
+     * @return {@link InputStream} stream
+     *
+     * @throws ServerInternalFault, IOException, IllegalParameterFault
+     */
+    InputStream getResponseAsStream() throws ServerInternalFault, IOException,
             IllegalParameterFault;
 
     /**

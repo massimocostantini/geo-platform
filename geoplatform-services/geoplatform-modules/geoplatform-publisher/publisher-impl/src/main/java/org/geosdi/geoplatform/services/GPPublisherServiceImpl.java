@@ -244,7 +244,7 @@ public class GPPublisherServiceImpl implements GPPublisherService,
         this.removeLayer(layerName);
         restPublisher.unpublishFeatureType(userWorkspace, layerName, layerName);
         reload();
-        restPublisher.removeDatastore(userWorkspace, layerName);
+        restPublisher.removeDatastore(userWorkspace, layerName, Boolean.TRUE);
         return true;
     }
 
@@ -272,7 +272,7 @@ public class GPPublisherServiceImpl implements GPPublisherService,
         String userWorkspace = getWorkspace(userName);
         InfoPreview info = null;
         try {
-            Integer code = this.getEPSGCode(featureType.getCRS());
+            Integer code = this.getEPSGCodeFromString(featureType.getCRS());
             String epsgCode = null;
             if (code != null) {
                 epsgCode = "EPSG:" + code.toString();
@@ -312,7 +312,7 @@ public class GPPublisherServiceImpl implements GPPublisherService,
 //            parametersMap.put("url", layerName);
 //            featureType = DataStoreFinder.getDataStore(parametersMap).getFeatureSource(layerName);
 //            System.out.println("" + CRS.getGeographicBoundingBox());
-            Integer code = this.getEPSGCode(featureType.getCRS());
+            Integer code = this.getEPSGCodeFromString(featureType.getCRS());
             String epsgCode = null;
             if (code != null) {
                 epsgCode = "EPSG:" + code.toString();
@@ -370,6 +370,7 @@ public class GPPublisherServiceImpl implements GPPublisherService,
         List<String> shpEntryNameList = Lists.newArrayList();
         List<String> tifEntryNameList = Lists.newArrayList();
         List<ZipEntry> sldEntryList = Lists.newArrayList();
+        List<ZipEntry> prjEntryList = Lists.newArrayList();
         List<LayerInfo> infoShapeList = Lists.newArrayList();
         ZipFile zipSrc = null;
         try {
@@ -400,26 +401,22 @@ public class GPPublisherServiceImpl implements GPPublisherService,
                     logger.info("INFO: Found shape file " + entryName);
                     shpEntryNameList.add(entryName);
                 } else if (entryName.endsWith(".sld")) {
-                    logger.info("Adding sld to entry list");
+                    logger.info("Adding sld to entry list: " + entryName);
                     sldEntryList.add(entry);
                     continue;
+                } else if (entryName.endsWith(".prj")) {
+                    logger.info("Adding prj to entry list: " + entryName);
+                    prjEntryList.add(entry);
+                    continue;
+                } else if (entryName.endsWith(".tfw")) {
+                    destinationDir = tempUserTifDir;
                 }
                 PublishUtility.extractEntryToFile(entry, zipSrc, destinationDir);
             }
-            //Verificare presenza file sld associato a geotiff
-            for (ZipEntry sldEntry : sldEntryList) {
-                int lastIndex = sldEntry.getName().lastIndexOf('/');
-                int endNamePos = sldEntry.getName().lastIndexOf('.');
-                String sldEntryName = sldEntry.getName().substring(lastIndex + 1, endNamePos);
-                logger.info("sldEntryName: " + sldEntryName);
-                if (this.isDuplicatedName(sldEntryName, tifEntryNameList)) {//geotiff sld
-                    logger.info("in geotiff sld");
-                    PublishUtility.extractEntryToFile(sldEntry, zipSrc, tempUserTifDir);
-                } else {//shp sld
-                    logger.info("in shp sld");
-                    PublishUtility.extractEntryToFile(sldEntry, zipSrc, tempUserDir);
-                }
-            }// fine decompressione
+            //Verificare presenza file sld associato a geotiff oppure a shp file
+            this.putEntryInTheRightDir(sldEntryList, zipSrc, tempUserTifDir, tempUserDir, tifEntryNameList);
+            this.putEntryInTheRightDir(prjEntryList, zipSrc, tempUserTifDir, tempUserDir, tifEntryNameList);
+            // fine decompressione
         } catch (Exception e) {
             logger.error("ERRORE : " + e);
         } finally {
@@ -441,11 +438,28 @@ public class GPPublisherServiceImpl implements GPPublisherService,
         return infoShapeList;
     }
 
-    private boolean isDuplicatedName(String sldName, List<String> tifEntryNameList) {
+    private void putEntryInTheRightDir(List<ZipEntry> entryListElement, ZipFile zipSrc,
+            String tempUserTifDir, String tempUserDir, List<String> tifEntryNameList) {
+        for (ZipEntry elementEntry : entryListElement) {
+            int lastIndex = elementEntry.getName().lastIndexOf('/');
+            int endNamePos = elementEntry.getName().lastIndexOf('.');
+            String prjEntryName = elementEntry.getName().substring(lastIndex + 1, endNamePos).toLowerCase();
+            logger.info("elementEntryName: " + prjEntryName);
+            if (this.isDuplicatedName(prjEntryName, tifEntryNameList)) {//geotiff sld
+                logger.info("in geotiff");
+                PublishUtility.extractEntryToFile(elementEntry, zipSrc, tempUserTifDir);
+            } else {//shp sld
+                logger.info("in shp");
+                PublishUtility.extractEntryToFile(elementEntry, zipSrc, tempUserDir);
+            }
+        }
+    }
+
+    private boolean isDuplicatedName(String fileName, List<String> tifEntryNameList) {
         for (String tifEntryName : tifEntryNameList) {
             String tifName = tifEntryName.substring(0, tifEntryName.lastIndexOf(
                     '.'));
-            if (tifName.equals(sldName)) {
+            if (tifName.equals(fileName)) {
                 return true;
             }
         }
@@ -469,9 +483,26 @@ public class GPPublisherServiceImpl implements GPPublisherService,
             String SLDFileName = origName + ".sld";
             File fileSLD = new File(tempUserTifDir, SLDFileName);
             if (fileSLD.exists()) {
+                PublishUtility.copyFile(fileSLD,
+                        tempUserTifDir, userName + "_" + SLDFileName, true);
+                fileSLD.delete();
                 info.sld = this.publishSLD(fileSLD, info.name);
             } else {
                 info.sld = "default_raster";
+            }
+            String TFWFileName = origName + ".tfw";
+            File fileTFW = new File(tempUserTifDir, TFWFileName);
+            if (fileTFW.exists()) {
+                PublishUtility.copyFile(fileTFW,
+                        tempUserTifDir, userName + "_" + TFWFileName, true);
+                fileTFW.delete();
+            }
+            String PRJFileName = origName + ".prj";
+            File filePRJ = new File(tempUserTifDir, PRJFileName);
+            if (filePRJ.exists()) {
+                PublishUtility.copyFile(filePRJ,
+                        tempUserTifDir, userName + "_" + PRJFileName, true);
+                filePRJ.delete();
             }
             infoTifList.add(info);
         }
@@ -482,11 +513,10 @@ public class GPPublisherServiceImpl implements GPPublisherService,
         reload();
         logger.info(
                 "\n INFO: FOUND STYLE FILE. TRYING TO PUBLISH WITH " + layerName + " NAME");
-        boolean returnPS = false;
         if (existsStyle(layerName)) {
             restPublisher.removeStyle(layerName);
         }
-        returnPS = restPublisher.publishStyle(fileSLD, layerName);
+        boolean returnPS = restPublisher.publishStyle(fileSLD, layerName);
         logger.info("\n INFO: PUBLISH STYLE RESULT " + returnPS);
         return layerName;
     }
@@ -502,14 +532,20 @@ public class GPPublisherServiceImpl implements GPPublisherService,
         return featureSource;
     }
 
-    private Integer getEPSGCode(String crs) {
-        CoordinateReferenceSystem coordinateReferenceSystem = null;
-        try {
-            coordinateReferenceSystem = CRS.parseWKT(crs);
-        } catch (FactoryException fe) {
-            logger.error("Failed to extract CoordinateReferenceSystem from String: " + fe);
+    private Integer getEPSGCodeFromString(String crs) {
+        Integer codeToReturn = null;
+        if (crs.startsWith("GEOGCS")) {
+            CoordinateReferenceSystem coordinateReferenceSystem = null;
+            try {
+                coordinateReferenceSystem = CRS.parseWKT(crs);
+            } catch (FactoryException fe) {
+                logger.error("Failed to extract CoordinateReferenceSystem from String: " + fe);
+            }
+            codeToReturn = this.getEPSGCode(coordinateReferenceSystem);
+        } else if (crs.startsWith("EPSG")) {
+            codeToReturn = Integer.parseInt(crs.substring(crs.indexOf(":") + 1));
         }
-        return this.getEPSGCode(coordinateReferenceSystem);
+        return codeToReturn;
     }
 
     private Integer getEPSGCode(SimpleFeatureSource featureSource) {
@@ -603,6 +639,36 @@ public class GPPublisherServiceImpl implements GPPublisherService,
      * @param dataStoreName
      * @return check whether the layer layerName exists in the workspace
      * workspace
+     */
+    public boolean existsLayerInDataStore(String workspace, String dataStoreName, String layerName) {
+        boolean result = Boolean.FALSE;
+        String layerStoreName = null;
+        RESTLayer layer = restReader.getLayer(layerName);
+        if (layer != null) {
+            RESTFeatureType restft = restReader.getFeatureType(layer);
+            if (restft != null) {
+                layerStoreName = restft.getName();
+            }
+        }
+        if (layerStoreName != null && dataStoreName.equals(layerStoreName)) {
+            result = Boolean.TRUE;
+        }
+//        RESTDataStoreList workspaceDataStores = restReader.getDatastores(
+//                workspace);
+//        for (int i = 0; i < workspaceDataStores.size(); i++) {
+//            if (workspaceDataStores.get(i).getName().equals(dataStoreName)) {
+////                restReader.getLayer(layerName). Datastore(workspace, dataStoreName).;
+//            }
+//        }
+        return result;
+    }
+
+    /**
+     * ************
+     *
+     * @param workspace
+     * @param dataStoreName
+     * @return check whether the dataStore exists in the workspace
      */
     public boolean existsDataStore(String workspace, String dataStoreName) {
         RESTDataStoreList workspaceDataStores = restReader.getDatastores(
@@ -777,8 +843,7 @@ public class GPPublisherServiceImpl implements GPPublisherService,
             info.sld = infoPreview.getStyleName();
             if (infoPreview.isIsShape()) {
                 info.isShp = Boolean.TRUE;
-                infoPreview = this.publishShpInPreview(userName, userWorkspace,
-                        info, tempUserZipDir);
+                infoPreview = this.publishShpInPreview(userWorkspace, info, tempUserZipDir);
             } else {
                 info.isShp = Boolean.FALSE;
                 File fileInTifDir = new File(tempUserTifDir, info.name + ".tif");
@@ -844,6 +909,9 @@ public class GPPublisherServiceImpl implements GPPublisherService,
             File fileInTifDir, String fileName, String epsg, String sld) {
         InfoPreview infoPreview;
         GeoTiffOverviews.overviewTiff(overviewsConfiguration, fileInTifDir.getAbsolutePath());
+        if (restReader.getCoverage(userWorkspace, fileName, fileName) != null) {
+            restPublisher.removeCoverageStore(userWorkspace, fileName, Boolean.TRUE);
+        }
         try {
 //                logger.info(
 //                        "\n INFO: STYLE TO PUBLISH " + info.sld + " NAME :" + info.name);
@@ -881,10 +949,10 @@ public class GPPublisherServiceImpl implements GPPublisherService,
         return infoPreview;
     }
 
-    private InfoPreview publishShpInPreview(String userName, String userWorkspace, LayerInfo info,
+    private InfoPreview publishShpInPreview(String userWorkspace, LayerInfo info,
             String tempUserZipDir) {
         InfoPreview infoPreview = null;
-        String datatStoreName = info.name;
+        String datatStoreName = userWorkspace;
         // check if the dataStore already exists
         if (existsDataStore(userWorkspace, datatStoreName)) {
             boolean result = restPublisher.unpublishFeatureType(userWorkspace,

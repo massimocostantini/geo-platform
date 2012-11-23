@@ -19,7 +19,9 @@
     <modules>
         <module>geoplatform-configurator</module>
         <module>geoplatform-oxm</module>
+        <module>geoplatform-xml-utilities</module>
         <module>geoplatform-connectors</module>
+        <module>geoplatform-persistence-layer</module>
     </modules>
 
 </project>

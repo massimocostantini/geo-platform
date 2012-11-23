@@ -75,8 +75,6 @@ public class WFSGetFeatureRequestV110
         }
 
         GetFeatureType request = new GetFeatureType();
-        request.setService("WFS");
-        request.setVersion("1.1.0");
 
         QueryType query = new QueryType();
         query.setTypeName(Arrays.asList(typeName));
@@ -116,6 +114,10 @@ public class WFSGetFeatureRequestV110
                 query.setFilter(filter);
             }
             filter.setSpatialOps(areaOperator);
+        }
+
+        if (srs != null) {
+            query.setSrsName(srs);
         }
 
         if (resultType != null) {

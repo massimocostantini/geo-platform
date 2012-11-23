@@ -39,20 +39,19 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import javax.xml.namespace.QName;
 import junit.framework.Assert;
-import org.geosdi.geoplatform.configurator.category.WFSTest;
 import org.geosdi.geoplatform.connector.server.request.BBox;
 import org.geosdi.geoplatform.connector.server.request.WFSGetFeatureRequest;
 import org.geosdi.geoplatform.xml.gml.v311.FeatureArrayPropertyType;
 import org.geosdi.geoplatform.xml.wfs.v110.FeatureCollectionType;
 import org.geosdi.geoplatform.xml.wfs.v110.ResultTypeType;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Vincenzo Monteverde <vincenzo.monteverde@geosdi.org>
  */
-@Category(WFSTest.class)
+//@Category(WFSTest.class)
 public class WFSGetFeatureTest extends WFSTestConfigurator {
 
     private QName statesName = new QName("topp:states");
@@ -124,5 +123,27 @@ public class WFSGetFeatureTest extends WFSTestConfigurator {
 
         FeatureCollectionType response = request.getResponse();
         Assert.assertEquals(4, response.getNumberOfFeatures().intValue());
+    }
+
+    @Ignore("ToDo complete with assertion")
+    @Test
+    public void statesSRS() throws Exception {
+        WFSGetFeatureRequest<FeatureCollectionType> request =
+                super.serverConnector.createGetFeatureRequest();
+
+        request.setTypeName(statesName);
+        request.setResultType(ResultTypeType.RESULTS.value());
+
+        FeatureCollectionType response = request.getResponse();
+        // TODO Check geometry into default SRS EPSG:4326
+
+        request = super.serverConnector.createGetFeatureRequest();
+
+        request.setTypeName(statesName);
+        request.setResultType(ResultTypeType.RESULTS.value());
+        request.setSRS("EPSG:900913");
+
+        response = request.getResponse();
+        // TODO Check geometry into SRS EPSG:900913
     }
 }

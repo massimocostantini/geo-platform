@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>org.geosdi</groupId>
+            <artifactId>geoplatform-wfs-connector</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geosdi</groupId>
             <artifactId>geoplatform-ws-util</artifactId>
         </dependency>
         <dependency>
@@ -65,11 +70,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>          
         </dependency>
-            
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-gwt</artifactId>
-        </dependency>
 
         <!-- logging dependencies, delegate all to slf4j and use logback -->
         <dependency>
@@ -91,36 +91,6 @@
         <dependency>
             <groupId>net.java.dev.jsr-275</groupId>
             <artifactId>jsr-275</artifactId>
-        </dependency>
-
-        <!-- GEOTOOLS -->
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-main</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-wfs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-referencing</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-metadata</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-epsg-extension</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-epsg-wkt</artifactId>
         </dependency>
 
         <!-- SPRING -->
@@ -177,7 +147,7 @@
 
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -195,6 +165,12 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-security</artifactId>
+        </dependency>
+        
+        <!-- JTS -->
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
         </dependency>
 
         <!-- SCOPE TEST -->

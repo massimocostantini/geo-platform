@@ -303,6 +303,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-ext</artifactId>
+            <version>1.7</version>
+        </dependency>
 
         <!-- JUnit -->
         <dependency>
@@ -426,7 +432,7 @@
                                                 
                         <configuration>
                             <!-- Need another database to drop the targeted one -->
-                            <url>jdbc:postgresql://localhost:5432/template_postgis</url>
+                            <url>${db.baseurl}/template_postgis</url>
                             <driver>${db.driverClassName}</driver>                            
                             <username>${db.username}</username>
                             <password>${db.password}</password>                            
@@ -460,7 +466,7 @@
                         </dependencies>
                                                 
                         <configuration>
-                            <url>jdbc:postgresql://localhost:5432/</url>
+                            <url>${db.baseurl}</url>
                             <driver>${db.driverClassName}</driver>
                             <username>${db.username}</username>
                             <password>${db.password}</password>
