@@ -33,41 +33,13 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.connector.server.request.v110;
+package org.geosdi.geoplatform.responce.collection.adapter;
 
-import org.geosdi.geoplatform.connector.server.GPServerConnector;
-import org.geosdi.geoplatform.connector.server.request.AbstractDescribeFeatureTypeRequest;
-import org.geosdi.geoplatform.exception.IllegalParameterFault;
-import org.geosdi.geoplatform.xml.wfs.v110.DescribeFeatureTypeType;
-import org.geosdi.geoplatform.xml.xsd.v2001.Schema;
+import org.geosdi.geoplatform.responce.collection.GenericMapAdapter;
 
 /**
  *
  * @author Vincenzo Monteverde <vincenzo.monteverde@geosdi.org>
- *
- * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
- * @email giuseppe.lascaleia@geosdi.org
  */
-public class WFSDescribeFeatureTypeRequestV110
-        extends AbstractDescribeFeatureTypeRequest<Schema> {
-
-    public WFSDescribeFeatureTypeRequestV110(GPServerConnector server) {
-        super(server);
-    }
-
-    @Override
-    protected Object createRequest() throws IllegalParameterFault {
-        DescribeFeatureTypeType request = new DescribeFeatureTypeType();
-
-        if ((typeName == null) || (typeName.isEmpty())) {
-            throw new IllegalArgumentException(
-                    "Parameter TypeName must not be empty.");
-        }
-        request.setTypeName(typeName);
-
-        request.setOutputFormat(outputFormat != null
-                ? outputFormat : "text/xml; subtype=gml/3.1.1");
-
-        return request;
-    }
+public class StringStringMapAdapter extends GenericMapAdapter<String, String> {
 }

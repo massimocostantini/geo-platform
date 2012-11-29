@@ -38,12 +38,12 @@ package org.geosdi.geoplatform.connector.wfs;
 import java.math.BigInteger;
 import java.util.Arrays;
 import javax.xml.namespace.QName;
-import junit.framework.Assert;
-import org.geosdi.geoplatform.connector.server.request.BBox;
 import org.geosdi.geoplatform.connector.server.request.WFSGetFeatureRequest;
+import org.geosdi.geoplatform.gui.shared.bean.BBox;
 import org.geosdi.geoplatform.xml.gml.v311.FeatureArrayPropertyType;
 import org.geosdi.geoplatform.xml.wfs.v110.FeatureCollectionType;
 import org.geosdi.geoplatform.xml.wfs.v110.ResultTypeType;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -117,6 +117,7 @@ public class WFSGetFeatureTest extends WFSTestConfigurator {
         request.setResultType(ResultTypeType.HITS.value());
         request.setTypeName(statesName);
         request.setBBox(new BBox(-75.102613, 40.212597, -72.361859, 41.512517));
+        request.setSRS("EPSG:4326");
 
         logger.info("RESPONSE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ {}",
                     request.getResponseAsString());

@@ -33,72 +33,15 @@
  * wish to do so, delete this exception statement from your version.
  *
  */
-package org.geosdi.geoplatform.connector.server.request;
+package org.geosdi.geoplatform.responce.collection.adapter;
 
-import java.io.Serializable;
+import org.geosdi.geoplatform.responce.collection.GenericMapAdapter;
 
 /**
+ * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
+ * @email giuseppe.lascaleia@geosdi.org
  *
  * @author Vincenzo Monteverde <vincenzo.monteverde@geosdi.org>
  */
-public class BBox implements Serializable {
-
-    private static final long serialVersionUID = -934568681637981344L;
-    //
-    private double minX;
-    private double minY;
-    private double maxX;
-    private double maxY;
-
-    public BBox() {
-    }
-
-    public BBox(double minX, double minY, double maxX, double maxY) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
-    }
-
-    public double getMinX() {
-        return minX;
-    }
-
-    public void setMinX(double minX) {
-        this.minX = minX;
-    }
-
-    public double getMinY() {
-        return minY;
-    }
-
-    public void setMinY(double minY) {
-        this.minY = minY;
-    }
-
-    public double getMaxX() {
-        return maxX;
-    }
-
-    public void setMaxX(double maxX) {
-        this.maxX = maxX;
-    }
-
-    public double getMaxY() {
-        return maxY;
-    }
-
-    public void setMaxY(double maxY) {
-        this.maxY = maxY;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder("BBox {");
-        str.append("minX=").append(minX);
-        str.append(", minY=").append(minY);
-        str.append(", maxX=").append(maxX);
-        str.append(", maxY=").append(maxY);
-        return str.append("}").toString();
-    }
+public class StringBooleanMapAdapter extends GenericMapAdapter<String, Boolean> {
 }

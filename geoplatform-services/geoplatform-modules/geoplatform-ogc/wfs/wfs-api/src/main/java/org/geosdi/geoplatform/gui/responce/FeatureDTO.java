@@ -33,11 +33,65 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.responce.collection;
+package org.geosdi.geoplatform.gui.responce;
+
+import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import org.geosdi.geoplatform.responce.collection.FeatureAttributesMap;
 
 /**
  *
  * @author Vincenzo Monteverde <vincenzo.monteverde@geosdi.org>
  */
-public class XmppAttributesMapAdapter extends GenericMapAdapter<String, String> {
+@XmlRootElement(name = "FeatureDTO")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class FeatureDTO implements Serializable {
+
+    private static final long serialVersionUID = -5477132588177572703L;
+    //
+    private String fid;
+    private String geometry;
+    // Non-spatial attributes
+    private FeatureAttributesMap attributes;
+
+    public FeatureDTO() {
+    }
+
+    public FeatureDTO(String fid) {
+        this.fid = fid;
+    }
+
+    public String getFID() {
+        return fid;
+    }
+
+    public void setFID(String fid) {
+        this.fid = fid;
+    }
+
+    public String getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(String geometry) {
+        this.geometry = geometry;
+    }
+
+    public FeatureAttributesMap getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(FeatureAttributesMap attributes) {
+        this.attributes = attributes;
+    }
+
+    @Override
+    public String toString() {
+        return "FeatureDTO{"
+                + "fid=" + fid
+                + ", geometry=" + geometry
+                + ", attributes=" + attributes + '}';
+    }
 }

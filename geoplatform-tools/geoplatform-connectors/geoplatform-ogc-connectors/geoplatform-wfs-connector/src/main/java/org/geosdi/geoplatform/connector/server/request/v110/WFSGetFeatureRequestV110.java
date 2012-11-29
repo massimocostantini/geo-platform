@@ -39,8 +39,8 @@ import java.util.Arrays;
 import javax.xml.bind.JAXBElement;
 import org.geosdi.geoplatform.connector.server.GPServerConnector;
 import org.geosdi.geoplatform.connector.server.request.AbstractGetFeatureRequest;
-import org.geosdi.geoplatform.connector.server.request.BBox;
 import org.geosdi.geoplatform.exception.IllegalParameterFault;
+import org.geosdi.geoplatform.gui.shared.bean.BBox;
 import org.geosdi.geoplatform.xml.filter.v110.BBOXType;
 import org.geosdi.geoplatform.xml.filter.v110.FilterType;
 import org.geosdi.geoplatform.xml.filter.v110.GmlObjectIdType;
@@ -97,12 +97,15 @@ public class WFSGetFeatureRequestV110
                 GmlObjectIdType obj = new GmlObjectIdType();
                 obj.setId(featureID);
 
-                JAXBElement<GmlObjectIdType> gmlObjectId = filterFactory.createGmlObjectId(
-                        obj);
+                JAXBElement<GmlObjectIdType> gmlObjectId = filterFactory.createGmlObjectId(obj);
                 filter.getId().add(gmlObjectId);
             }
 
             query.setFilter(filter);
+        }
+
+        if (srs != null) {
+            query.setSrsName(srs);
         }
 
         if (bBox != null) {
@@ -116,17 +119,11 @@ public class WFSGetFeatureRequestV110
             filter.setSpatialOps(areaOperator);
         }
 
-        if (srs != null) {
-            query.setSrsName(srs);
-        }
+        request.setResultType(resultType != null
+                ? ResultTypeType.fromValue(resultType) : ResultTypeType.RESULTS);
 
-        if (resultType != null) {
-            request.setResultType(ResultTypeType.fromValue(resultType));
-        }
-
-        if (outputFormat != null) {
-            request.setOutputFormat(outputFormat);
-        }
+        request.setOutputFormat(outputFormat != null
+                ? outputFormat : "text/xml; subtype=gml/3.1.1");
 
         if (maxFeatures != null) {
             request.setMaxFeatures(maxFeatures);
@@ -145,7 +142,9 @@ public class WFSGetFeatureRequestV110
         bBoxType.setPropertyName(propertyNameType);
 
         EnvelopeType envelope = this.createEnvelope(bBox);
-        envelope.setSrsName("EPSG:4326");
+        if (srs != null) {
+            envelope.setSrsName(srs);
+        }
         bBoxType.setEnvelope(gmlFactory.createEnvelope(envelope));
 
         return filterFactory.createBBOX(bBoxType);

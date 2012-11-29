@@ -53,22 +53,21 @@ import org.springframework.stereotype.Service;
  * @email giuseppe.lascaleia@geosdi.org
  */
 @Service(value = "gpDescribeFeatureService")
-public class GPDescribeFeatureService extends AbstractFeatureService implements
-        DescribeFeatureService {
+public class GPDescribeFeatureService extends AbstractFeatureService
+        implements DescribeFeatureService {
 
     @Override
-    public LayerSchemaDTO describeFeatureType(String serverUrl,
-            String typeName)
+    public LayerSchemaDTO describeFeatureType(String serverURL, String typeName)
             throws ResourceNotFoundFault, IllegalParameterFault {
         logger.debug("\n*** WFS DescribeFeatureType for layer {} ***", typeName);
-        serverUrl = serverUrl.replace("wms", "wfs");
+        serverURL = serverURL.replace("wms", "wfs");
 
         if (!typeName.contains(":")) {
             throw new IllegalParameterFault(
                     "typeName must contain the char \":\"");
         }
 
-        if (!this.wfsConfigurator.matchDefaultDataSource(serverUrl)) {
+        if (!this.wfsConfigurator.matchDefaultDataSource(serverURL)) {
             throw new ResourceNotFoundFault(
                     "Edit Mode cannot be applied to the server with url "
                     + wfsConfigurator.getDefaultWFSDataSource());
@@ -76,21 +75,23 @@ public class GPDescribeFeatureService extends AbstractFeatureService implements
 
         LayerSchemaDTO layerSchema = null;
         try {
-            GPWFSConnector serverConnector = super.createWFSConnector(serverUrl);
-            WFSDescribeFeatureTypeRequest<Schema> request = serverConnector.createDescribeFeatureTypeRequest();
+            GPWFSConnector serverConnector = super.createWFSConnector(serverURL);
+            WFSDescribeFeatureTypeRequest<Schema> request =
+                    serverConnector.createDescribeFeatureTypeRequest();
 
             QName qName = new QName(typeName);
             request.setTypeName(Arrays.asList(qName));
-            request.setOutputFormat("text/xml; subtype=gml/3.1.1");
 
             Schema response = request.getResponse();
             String name = typeName.substring(typeName.indexOf(":") + 1);
-            layerSchema = featureReader.getFeature(response, name);
+            layerSchema = featureReaderXSD.getFeature(response, name);
 
             if (layerSchema == null) {
-                logger.error("\n### The layer \"{}\" isn't a feature ###",
-                        typeName);
+                logger.error("\n### The layer \"{}\" isn't a feature ###", typeName);
+            } else {
+                layerSchema.setScope(serverURL);
             }
+
         } catch (ServerInternalFault ex) {
             logger.error("\n### ServerInternalFault: {} ###", ex.getMessage());
         } catch (IOException ex) {
