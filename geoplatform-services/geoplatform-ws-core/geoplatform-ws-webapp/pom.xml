@@ -422,7 +422,7 @@
         <profile>
             <id>publisher</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
                 <property>
                     <name>full</name>
                 </property>
