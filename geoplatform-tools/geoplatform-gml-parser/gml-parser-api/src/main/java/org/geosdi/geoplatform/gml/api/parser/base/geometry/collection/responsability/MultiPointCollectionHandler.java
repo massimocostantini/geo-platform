@@ -33,16 +33,40 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.collection.responsability;
+
+import com.vividsolutions.jts.geom.GeometryCollection;
+import org.geosdi.geoplatform.gml.api.AbstractGeometricAggregate;
+import org.geosdi.geoplatform.gml.api.MultiPoint;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.multi.point.GMLBaseMultiPointParser;
+import org.geosdi.geoplatform.gml.api.parser.base.parameter.GMLBaseParametersRepo;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+public class MultiPointCollectionHandler extends GeometryCollectionHandler {
 
-    boolean isSetMultiLineString();
+    private GMLBaseMultiPointParser multiPointParser = GMLBaseParametersRepo.getDefaultMultiPointParser();
 
-    MultiLineString getMultiLineString();
+    public MultiPointCollectionHandler() {
+        super.setSuccessor(new MultiLineStringCollectionHandler());
+    }
+
+    @Override
+    public GeometryCollection parseGeometry(
+            AbstractGeometricAggregate gmlGeometry)
+            throws ParserException {
+
+        return isCompatibleGeometry(gmlGeometry)
+               ? multiPointParser.parseGeometry((MultiPoint) gmlGeometry)
+               : super.forwardParseGeometry(gmlGeometry);
+    }
+
+    @Override
+    protected boolean isCompatibleGeometry(Object gmlGeometry) {
+        return gmlGeometry instanceof MultiPoint;
+    }
 }

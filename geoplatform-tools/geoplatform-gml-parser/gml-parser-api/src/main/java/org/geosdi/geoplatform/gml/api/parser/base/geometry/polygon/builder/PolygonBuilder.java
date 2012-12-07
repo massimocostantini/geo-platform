@@ -33,16 +33,20 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.polygon.builder;
+
+import com.vividsolutions.jts.geom.LinearRing;
+import org.geosdi.geoplatform.gml.api.Polygon;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+public interface PolygonBuilder {
 
-    boolean isSetMultiLineString();
+    LinearRing buildExteriorPolygon(Polygon polygon) throws ParserException;
 
-    MultiLineString getMultiLineString();
+    LinearRing[] buildInteriorPolygon(Polygon polygon) throws ParserException;
 }

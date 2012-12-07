@@ -33,16 +33,52 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.sextante.responsability;
+
+import com.vividsolutions.jts.geom.Geometry;
+import org.geosdi.geoplatform.gml.api.AbstractGeometry;
+import org.geosdi.geoplatform.gml.api.MultiPolygon;
+import org.geosdi.geoplatform.gml.api.MultiPolygonProperty;
+import org.geosdi.geoplatform.gml.api.PropertyType;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.multi.polygon.GMLBaseMultiPolygonParser;
+import org.geosdi.geoplatform.gml.api.parser.base.parameter.GMLBaseParametersRepo;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
-
-    boolean isSetMultiLineString();
-
-    MultiLineString getMultiLineString();
+public class SextanteMultiPolygonHandler extends SextanteGeometryHandler {
+    
+    private GMLBaseMultiPolygonParser multiPolygonParser = GMLBaseParametersRepo.getDefaultMultiPolygonParser();
+    
+    public SextanteMultiPolygonHandler() {
+        super.setSuccessor(new SextanteMultiSurfaceHandler());
+    }
+    
+    @Override
+    public Geometry parseGeometry(AbstractGeometry gmlGeometry) throws ParserException {
+        return isCompatibleGeometry(gmlGeometry)
+               ? multiPolygonParser.parseGeometry((MultiPolygon) gmlGeometry)
+               : super.forwardParseGeometry(gmlGeometry);
+    }
+    
+    @Override
+    public Geometry parseGeometry(PropertyType propertyType) throws ParserException {
+        return isCompatibleProperty(propertyType)
+               ? multiPolygonParser.parseGeometry(
+                (MultiPolygonProperty) propertyType)
+               : super.forwardParseGeometry(propertyType);
+    }
+    
+    @Override
+    protected boolean isCompatibleGeometry(Object gmlGeometry) {
+        return gmlGeometry instanceof MultiPolygon;
+    }
+    
+    @Override
+    protected boolean isCompatibleProperty(Object propertyType) {
+        return propertyType instanceof MultiPolygonProperty;
+    }
 }

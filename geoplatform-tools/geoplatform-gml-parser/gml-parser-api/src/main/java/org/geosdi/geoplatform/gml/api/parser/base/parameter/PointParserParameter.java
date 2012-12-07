@@ -33,16 +33,39 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.parameter;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import org.geosdi.geoplatform.gml.api.parser.base.DefaultSRSBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.coordinate.CoordinateBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.point.GMLBasePointParser;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+class PointParserParameter implements BaseParameterValue<GMLBasePointParser> {
 
-    boolean isSetMultiLineString();
+    private GMLBasePointParser pointParser;
+    private BaseParameterValue<GeometryFactory> geometryParameter;
+    private BaseParameterValue<DefaultSRSBaseParser> srsParameter;
+    private BaseParameterValue<CoordinateBaseParser> coordinateParameter;
 
-    MultiLineString getMultiLineString();
+    public PointParserParameter(BaseParameterValue<GeometryFactory> theGeometryParameter,
+            BaseParameterValue<DefaultSRSBaseParser> theSrsParameter,
+            BaseParameterValue<CoordinateBaseParser> theCoordinateParameter) {
+        this.geometryParameter = theGeometryParameter;
+        this.srsParameter = theSrsParameter;
+        this.coordinateParameter = theCoordinateParameter;
+    }
+
+    @Override
+    public GMLBasePointParser getValue() {
+        return pointParser = (pointParser == null)
+                             ? new GMLBasePointParser(
+                geometryParameter.getValue(),
+                srsParameter.getValue(), coordinateParameter.getValue())
+                             : pointParser;
+    }
 }

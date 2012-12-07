@@ -33,16 +33,40 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.parameter;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import org.geosdi.geoplatform.gml.api.parser.base.DefaultSRSBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.multi.polygon.GMLBaseMultiPolygonParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.polygon.GMLBasePolygonParser;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+class MultiPolygonParserParameter implements
+        BaseParameterValue<GMLBaseMultiPolygonParser> {
 
-    boolean isSetMultiLineString();
+    private GMLBaseMultiPolygonParser multiPolygonParser;
+    private BaseParameterValue<GeometryFactory> geometryParameter;
+    private BaseParameterValue<DefaultSRSBaseParser> srsParameter;
+    private BaseParameterValue<GMLBasePolygonParser> polygonParameter;
 
-    MultiLineString getMultiLineString();
+    public MultiPolygonParserParameter(
+            BaseParameterValue<GeometryFactory> geometryParameter,
+            BaseParameterValue<DefaultSRSBaseParser> srsParameter,
+            BaseParameterValue<GMLBasePolygonParser> polygonParameter) {
+        this.geometryParameter = geometryParameter;
+        this.srsParameter = srsParameter;
+        this.polygonParameter = polygonParameter;
+    }
+
+    @Override
+    public GMLBaseMultiPolygonParser getValue() {
+        return multiPolygonParser = (multiPolygonParser == null)
+                                    ? new GMLBaseMultiPolygonParser(
+                geometryParameter.getValue(), srsParameter.getValue(),
+                polygonParameter.getValue()) : multiPolygonParser;
+    }
 }

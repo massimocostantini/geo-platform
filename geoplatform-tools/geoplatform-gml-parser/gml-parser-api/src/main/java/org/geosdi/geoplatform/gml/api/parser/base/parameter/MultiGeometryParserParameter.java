@@ -33,16 +33,24 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.parameter;
+
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.multi.geometry.GMLBaseMultiGeometryParser;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+class MultiGeometryParserParameter implements
+        BaseParameterValue<GMLBaseMultiGeometryParser> {
 
-    boolean isSetMultiLineString();
+    private GMLBaseMultiGeometryParser multiGeometryParser;
 
-    MultiLineString getMultiLineString();
+    @Override
+    public GMLBaseMultiGeometryParser getValue() {
+        return multiGeometryParser = ((multiGeometryParser == null)
+                                      ? new GMLBaseMultiGeometryParser()
+                                      : multiGeometryParser);
+    }
 }

@@ -33,16 +33,45 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.parameter;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import org.geosdi.geoplatform.gml.api.parser.base.DefaultSRSBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.coordinate.CoordinateBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.linerarring.GMLBaseLinearRingParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.point.GMLBasePointParser;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+class LinearRingParserParameter implements
+        BaseParameterValue<GMLBaseLinearRingParser> {
 
-    boolean isSetMultiLineString();
+    private GMLBaseLinearRingParser linearRingParser;
+    private BaseParameterValue<GeometryFactory> geometryParameter;
+    private BaseParameterValue<DefaultSRSBaseParser> srsParameter;
+    private BaseParameterValue<CoordinateBaseParser> coordinateParameter;
+    private BaseParameterValue<GMLBasePointParser> pointParameter;
 
-    MultiLineString getMultiLineString();
+    public LinearRingParserParameter(
+            BaseParameterValue<GeometryFactory> geometryParameter,
+            BaseParameterValue<DefaultSRSBaseParser> srsParameter,
+            BaseParameterValue<CoordinateBaseParser> coordinateParameter,
+            BaseParameterValue<GMLBasePointParser> pointParameter) {
+        this.geometryParameter = geometryParameter;
+        this.srsParameter = srsParameter;
+        this.coordinateParameter = coordinateParameter;
+        this.pointParameter = pointParameter;
+    }
+
+    @Override
+    public GMLBaseLinearRingParser getValue() {
+        return linearRingParser = (linearRingParser == null)
+                                  ? new GMLBaseLinearRingParser(
+                coordinateParameter.getValue(), pointParameter.getValue(),
+                geometryParameter.getValue(),
+                srsParameter.getValue()) : linearRingParser;
+    }
 }

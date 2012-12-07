@@ -33,16 +33,25 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.parameter;
+
+import org.geosdi.geoplatform.gml.api.parser.base.coordinate.CoordinateBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.coordinate.GMLCoordinateBaseParser;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+class CoordinateParserParameter implements
+        BaseParameterValue<CoordinateBaseParser> {
 
-    boolean isSetMultiLineString();
+    private CoordinateBaseParser coordinateParser;
 
-    MultiLineString getMultiLineString();
+    @Override
+    public CoordinateBaseParser getValue() {
+        return coordinateParser = (coordinateParser == null)
+                                  ? new GMLCoordinateBaseParser()
+                                  : coordinateParser;
+    }
 }

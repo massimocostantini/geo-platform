@@ -33,16 +33,56 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.sextante.responsability;
+
+import com.vividsolutions.jts.geom.Geometry;
+import org.geosdi.geoplatform.gml.api.AbstractGeometry;
+import org.geosdi.geoplatform.gml.api.PropertyType;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+public abstract class SextanteGeometryHandler {
 
-    boolean isSetMultiLineString();
+    protected SextanteGeometryHandler successor;
 
-    MultiLineString getMultiLineString();
+    public abstract Geometry parseGeometry(AbstractGeometry gmlGeometry)
+            throws ParserException;
+
+    protected Geometry forwardParseGeometry(AbstractGeometry gmlGeometry)
+            throws ParserException {
+        if (successor != null) {
+            return successor.parseGeometry(gmlGeometry);
+        }
+
+        throw new ParserException("There is no Ring in this Chain to Parse this "
+                + "GML Geometry : " + gmlGeometry);
+    }
+
+    public abstract Geometry parseGeometry(PropertyType propertyType)
+            throws ParserException;
+
+    protected Geometry forwardParseGeometry(PropertyType propertyType)
+            throws ParserException {
+        if (successor != null) {
+            return successor.parseGeometry(propertyType);
+        }
+
+        throw new ParserException("There is no Ring in this Chain to parse "
+                + "GML PropertyType : " + propertyType);
+    }
+
+    protected abstract boolean isCompatibleGeometry(Object gmlGeometry);
+
+    protected abstract boolean isCompatibleProperty(Object propertyType);
+
+    /**
+     * @param successor the successor to set
+     */
+    public void setSuccessor(SextanteGeometryHandler successor) {
+        this.successor = successor;
+    }
 }

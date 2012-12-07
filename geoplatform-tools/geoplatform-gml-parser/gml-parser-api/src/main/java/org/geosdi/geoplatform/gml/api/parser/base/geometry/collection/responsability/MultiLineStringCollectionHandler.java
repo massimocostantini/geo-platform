@@ -33,16 +33,41 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.collection.responsability;
+
+import com.vividsolutions.jts.geom.GeometryCollection;
+import org.geosdi.geoplatform.gml.api.AbstractGeometricAggregate;
+import org.geosdi.geoplatform.gml.api.MultiLineString;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.multi.line.GMLBaseMultiLineStringParser;
+import org.geosdi.geoplatform.gml.api.parser.base.parameter.GMLBaseParametersRepo;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+public class MultiLineStringCollectionHandler extends GeometryCollectionHandler {
 
-    boolean isSetMultiLineString();
+    private GMLBaseMultiLineStringParser multiLineStringParser = GMLBaseParametersRepo.getDefaultMultiLineStringParser();
 
-    MultiLineString getMultiLineString();
+    public MultiLineStringCollectionHandler() {
+        super.setSuccessor(new MultiPolygonCollectionHandler());
+    }
+
+    @Override
+    public GeometryCollection parseGeometry(
+            AbstractGeometricAggregate gmlGeometry)
+            throws ParserException {
+
+        return isCompatibleGeometry(gmlGeometry)
+               ? multiLineStringParser.parseGeometry(
+                (MultiLineString) gmlGeometry)
+               : super.forwardParseGeometry(gmlGeometry);
+    }
+
+    @Override
+    protected boolean isCompatibleGeometry(Object gmlGeometry) {
+        return gmlGeometry instanceof MultiLineString;
+    }
 }

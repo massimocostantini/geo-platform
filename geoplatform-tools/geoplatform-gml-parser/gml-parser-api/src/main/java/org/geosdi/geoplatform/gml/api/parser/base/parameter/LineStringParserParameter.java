@@ -33,16 +33,45 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.parameter;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import org.geosdi.geoplatform.gml.api.parser.base.DefaultSRSBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.coordinate.CoordinateBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.line.GMLBaseLineStringParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.point.GMLBasePointParser;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+class LineStringParserParameter implements
+        BaseParameterValue<GMLBaseLineStringParser> {
 
-    boolean isSetMultiLineString();
+    private GMLBaseLineStringParser lineStringParser;
+    private BaseParameterValue<GeometryFactory> geometryFactoryParameter;
+    private BaseParameterValue<DefaultSRSBaseParser> srsParameter;
+    private BaseParameterValue<CoordinateBaseParser> coordinateParameter;
+    private BaseParameterValue<GMLBasePointParser> pointParameter;
 
-    MultiLineString getMultiLineString();
+    public LineStringParserParameter(
+            BaseParameterValue<GeometryFactory> geometryFactoryParameter,
+            BaseParameterValue<DefaultSRSBaseParser> srsParameter,
+            BaseParameterValue<CoordinateBaseParser> coordinateParameter,
+            BaseParameterValue<GMLBasePointParser> pointParameter) {
+        this.geometryFactoryParameter = geometryFactoryParameter;
+        this.srsParameter = srsParameter;
+        this.coordinateParameter = coordinateParameter;
+        this.pointParameter = pointParameter;
+    }
+
+    @Override
+    public GMLBaseLineStringParser getValue() {
+        return lineStringParser = (lineStringParser == null)
+                                  ? new GMLBaseLineStringParser(
+                geometryFactoryParameter.getValue(),
+                srsParameter.getValue(), coordinateParameter.getValue(),
+                pointParameter.getValue()) : lineStringParser;
+    }
 }

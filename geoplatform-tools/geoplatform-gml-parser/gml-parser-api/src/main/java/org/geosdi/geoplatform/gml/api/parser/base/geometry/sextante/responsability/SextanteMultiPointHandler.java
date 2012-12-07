@@ -33,16 +33,52 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.sextante.responsability;
+
+import com.vividsolutions.jts.geom.Geometry;
+import org.geosdi.geoplatform.gml.api.AbstractGeometry;
+import org.geosdi.geoplatform.gml.api.MultiPoint;
+import org.geosdi.geoplatform.gml.api.MultiPointProperty;
+import org.geosdi.geoplatform.gml.api.PropertyType;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.multi.point.GMLBaseMultiPointParser;
+import org.geosdi.geoplatform.gml.api.parser.base.parameter.GMLBaseParametersRepo;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
-
-    boolean isSetMultiLineString();
-
-    MultiLineString getMultiLineString();
+public class SextanteMultiPointHandler extends SextanteGeometryHandler {
+    
+    private GMLBaseMultiPointParser multiPointParser = GMLBaseParametersRepo.getDefaultMultiPointParser();
+    
+    public SextanteMultiPointHandler() {
+        super.setSuccessor(new SextanteMultiLineStringHandler());
+    }
+    
+    @Override
+    public Geometry parseGeometry(AbstractGeometry gmlGeometry) throws ParserException {
+        return isCompatibleGeometry(gmlGeometry)
+               ? multiPointParser.parseGeometry((MultiPoint) gmlGeometry)
+               : super.forwardParseGeometry(gmlGeometry);
+    }
+    
+    @Override
+    public Geometry parseGeometry(PropertyType propertyType) throws ParserException {
+        return isCompatibleProperty(propertyType)
+               ? multiPointParser.parseGeometry(
+                (MultiPointProperty) propertyType)
+               : super.forwardParseGeometry(propertyType);
+    }
+    
+    @Override
+    protected boolean isCompatibleGeometry(Object gmlGeometry) {
+        return gmlGeometry instanceof MultiPoint;
+    }
+    
+    @Override
+    protected boolean isCompatibleProperty(Object propertyType) {
+        return propertyType instanceof MultiPointProperty;
+    }
 }

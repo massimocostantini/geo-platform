@@ -33,16 +33,40 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.parameter;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import org.geosdi.geoplatform.gml.api.parser.base.DefaultSRSBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.linerarring.GMLBaseLinearRingParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.polygon.GMLBasePolygonParser;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+class PolygonParserParameter implements
+        BaseParameterValue<GMLBasePolygonParser> {
 
-    boolean isSetMultiLineString();
+    private GMLBasePolygonParser polygonParser;
+    private BaseParameterValue<GeometryFactory> geometryParameter;
+    private BaseParameterValue<DefaultSRSBaseParser> srsParameter;
+    private BaseParameterValue<GMLBaseLinearRingParser> linearRingParameter;
 
-    MultiLineString getMultiLineString();
+    public PolygonParserParameter(
+            BaseParameterValue<GeometryFactory> geometryParameter,
+            BaseParameterValue<DefaultSRSBaseParser> srsParameter,
+            BaseParameterValue<GMLBaseLinearRingParser> linearRingParameter) {
+        this.geometryParameter = geometryParameter;
+        this.srsParameter = srsParameter;
+        this.linearRingParameter = linearRingParameter;
+    }
+
+    @Override
+    public GMLBasePolygonParser getValue() {
+        return polygonParser = (polygonParser == null)
+                               ? new GMLBasePolygonParser(
+                linearRingParameter.getValue(), geometryParameter.getValue(),
+                srsParameter.getValue()) : polygonParser;
+    }
 }

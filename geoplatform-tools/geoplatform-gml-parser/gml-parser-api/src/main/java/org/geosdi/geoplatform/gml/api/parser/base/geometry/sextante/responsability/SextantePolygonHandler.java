@@ -33,16 +33,49 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.sextante.responsability;
+
+import com.vividsolutions.jts.geom.Geometry;
+import org.geosdi.geoplatform.gml.api.AbstractGeometry;
+import org.geosdi.geoplatform.gml.api.Polygon;
+import org.geosdi.geoplatform.gml.api.PolygonProperty;
+import org.geosdi.geoplatform.gml.api.PropertyType;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.polygon.GMLBasePolygonParser;
+import org.geosdi.geoplatform.gml.api.parser.base.parameter.GMLBaseParametersRepo;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+public class SextantePolygonHandler extends SextanteGeometryHandler {
 
-    boolean isSetMultiLineString();
+    private GMLBasePolygonParser polygonParser = GMLBaseParametersRepo.getDefaultPolygonParser();
 
-    MultiLineString getMultiLineString();
+    public SextantePolygonHandler() {
+        super.setSuccessor(new SextanteMultiPointHandler());
+    }
+
+    @Override
+    public Geometry parseGeometry(AbstractGeometry gmlGeometry) throws ParserException {
+        return isCompatibleGeometry(gmlGeometry)
+               ? polygonParser.parseGeometry((Polygon) gmlGeometry)
+               : super.forwardParseGeometry(gmlGeometry);
+    }
+
+    @Override
+    public Geometry parseGeometry(PropertyType propertyType) throws ParserException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    protected boolean isCompatibleGeometry(Object gmlGeometry) {
+        return gmlGeometry instanceof Polygon;
+    }
+
+    @Override
+    protected boolean isCompatibleProperty(Object propertyType) {
+        return propertyType instanceof PolygonProperty;
+    }
 }

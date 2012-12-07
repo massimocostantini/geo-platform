@@ -33,16 +33,35 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.sextante;
+
+import com.vividsolutions.jts.geom.Geometry;
+import org.geosdi.geoplatform.gml.api.AbstractGeometry;
+import org.geosdi.geoplatform.gml.api.PropertyType;
+import org.geosdi.geoplatform.gml.api.parser.base.GMLBaseParser;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.sextante.responsability.SextanteGeometryHandler;
+import org.geosdi.geoplatform.gml.api.parser.base.geometry.sextante.responsability.SextantePointHandler;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
+ * <p>This class represnets the Sextante to parse All GML Geometry in JTS
+ * Geometry. </p>
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+public class GMLBaseSextanteParser implements
+        GMLBaseParser<AbstractGeometry, PropertyType, Geometry> {
 
-    boolean isSetMultiLineString();
+    private SextanteGeometryHandler pointHandler = new SextantePointHandler();
 
-    MultiLineString getMultiLineString();
+    @Override
+    public Geometry parseGeometry(AbstractGeometry gmlGeometry) throws ParserException {
+        return pointHandler.parseGeometry(gmlGeometry);
+    }
+
+    @Override
+    public Geometry parseGeometry(PropertyType propertyType) throws ParserException {
+        return pointHandler.parseGeometry(propertyType);
+    }
 }

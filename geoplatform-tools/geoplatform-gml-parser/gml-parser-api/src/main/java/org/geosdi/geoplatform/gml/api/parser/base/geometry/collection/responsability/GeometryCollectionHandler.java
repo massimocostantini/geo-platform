@@ -33,16 +33,40 @@
  * wish to do so, delete this exception statement from your version. 
  *
  */
-package org.geosdi.geoplatform.gml.api;
+package org.geosdi.geoplatform.gml.api.parser.base.geometry.collection.responsability;
+
+import com.vividsolutions.jts.geom.GeometryCollection;
+import org.geosdi.geoplatform.gml.api.AbstractGeometricAggregate;
+import org.geosdi.geoplatform.gml.api.parser.exception.ParserException;
 
 /**
  *
  * @author Giuseppe La Scaleia - CNR IMAA geoSDI Group
  * @email giuseppe.lascaleia@geosdi.org
  */
-public interface MultiLineStringProperty extends PropertyType {
+public abstract class GeometryCollectionHandler {
 
-    boolean isSetMultiLineString();
+    protected GeometryCollectionHandler successor;
 
-    MultiLineString getMultiLineString();
+    public abstract GeometryCollection parseGeometry(
+            AbstractGeometricAggregate gmlGeometry) throws ParserException;
+
+    protected GeometryCollection forwardParseGeometry(
+            AbstractGeometricAggregate gmlGeometry) throws ParserException {
+        if (successor != null) {
+            return successor.parseGeometry(gmlGeometry);
+        }
+
+        throw new ParserException("There is no Ring in this Chain "
+                + "to parse GML Geometry : " + gmlGeometry);
+    }
+
+    protected abstract boolean isCompatibleGeometry(Object gmlGeometry);
+
+    /**
+     * @param successor the successor to set
+     */
+    public void setSuccessor(GeometryCollectionHandler successor) {
+        this.successor = successor;
+    }
 }
