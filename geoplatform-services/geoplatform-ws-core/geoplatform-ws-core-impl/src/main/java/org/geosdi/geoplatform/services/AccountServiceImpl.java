@@ -371,10 +371,12 @@ class AccountServiceImpl {
      */
     public GPUser getUserDetailByUsernameAndPassword(String username, String plainPassword)
             throws ResourceNotFoundFault, IllegalParameterFault, AccountLoginFault {
-        GPUser user = accountDao.findByUsername(username);
+System.out.println("GetDetailUser :  Username " + username); 
+    	GPUser user = accountDao.findByUsername(username);
         if (user == null) {
             user = accountDao.findByEmail(username);
             if (user == null) {
+System.out.println("GetDetailUser :  User Null");            	
                 throw new ResourceNotFoundFault("User not found (username or email=" + username + ")");
             }
         }
@@ -389,10 +391,12 @@ class AccountServiceImpl {
 
         // Check password
         if (!this.gpDigester.matches(user.getPassword(), plainPassword)) {
+System.out.println("GetDetailUser :  Invalid Password");            	
             throw new IllegalParameterFault("Specified password was incorrect");
         }
 
         // Set authorities
+System.out.println("GetDetailUser :  setAutorities");            	
         user.setGPAuthorities(this.getGPAuthorities(user.getNaturalID()));
 
         return user;

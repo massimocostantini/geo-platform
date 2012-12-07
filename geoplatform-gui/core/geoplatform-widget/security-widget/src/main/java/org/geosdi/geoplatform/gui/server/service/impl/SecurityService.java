@@ -81,23 +81,28 @@ public class SecurityService implements ISecurityService {
             throws GeoPlatformException {
         GPUser user;
         try {
+System.out.println("SecurityService : " + username + " pwd: " + password );        	
             user = geoPlatformServiceClient.getUserDetailByUsernameAndPassword(
                     username, password);
+System.out.println("SecurityService : " + user.getName());        	
             return this.executeLoginOnGPAccount(user, geoPlatformServiceClient.getAccountPermission(user.getId()),
                     httpServletRequest);
         } catch (ResourceNotFoundFault ex) {
+System.out.println("SecurityService Unable to find user with username or email: " + username + " Error: " + ex);        	
             logger.error("SecurityService",
-                    "Unable to find user with username or email: " + username
-                    + " Error: " + ex);
+                    "Unable to find user with username or email: " + username + " Error: " + ex);
             throw new GeoPlatformException("Unable to find user with username or email: "
                     + username);
         } catch (SOAPFaultException ex) {
+System.out.println("Error on SecurityService: " + ex + " password incorrect");
             logger.error("Error on SecurityService: " + ex + " password incorrect");
             throw new GeoPlatformException("Password incorrect");
         } catch (IllegalParameterFault ex) {
+System.out.println("Error on SecurityService: " + ex);
             logger.error("Error on SecurityService: " + ex);
             throw new GeoPlatformException("Parameter incorrect");
         } catch (AccountLoginFault ex) {
+System.out.println("Error on SecurityService: " + ex);
             logger.error("Error on SecurityService: " + ex);
             throw new GeoPlatformException(
                     ex.getMessage() + ", contact the administrator");
@@ -133,6 +138,7 @@ public class SecurityService implements ISecurityService {
             GuiComponentsPermissionMapData guiComponentPermission,
             HttpServletRequest httpServletRequest)
             throws ResourceNotFoundFault, SOAPFaultException {
+System.out.println("executeLoginOnGP");        	
         GPAccountProject accountProject = geoPlatformServiceClient.getDefaultAccountProject(account.getId());
         GPProject project;
         GPViewport viewport = null;
@@ -158,6 +164,7 @@ public class SecurityService implements ISecurityService {
             throws GeoPlatformException {
         GPApplication application;
         try {
+System.out.println("applicationLogin");        	
             application = geoPlatformServiceClient.getApplication(appID);
             return this.executeLoginOnGPAccount(application,
                     geoPlatformServiceClient.getApplicationPermission(application.getAppID()),
@@ -179,6 +186,7 @@ public class SecurityService implements ISecurityService {
             throws GeoPlatformException {
         GPAccount account = null;
         try {
+System.out.println("Login from server");        	        	
             account = this.sessionUtility.getLoggedAccount(httpServletRequest);
         } catch (GPSessionTimeout timeout) {
             throw new GeoPlatformException(timeout);
